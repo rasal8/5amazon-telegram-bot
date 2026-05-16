@@ -2,19 +2,31 @@ import requests
 import random
 import asyncio
 from bs4 import BeautifulSoup
-from telegram import Bot
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
 
 BOT_TOKEN = "8843677021:AAEFr8bnX6szlIcvXV4gFs5OCt9CceBx1fQ"
 CHAT_ID = "-1003615762835"
 
 categories = {
-    "🏠 Home Decor": "korean home decor aesthetic room decor lamp beige",
+    "🏠 Home Decor": {
+        "trending": "table lamp aesthetic bedroom",
+        "evergreen": "minimal room decor"
+    },
 
-    "👗 Korean Outfits": "korean oversized fashion women aesthetic outfit",
+    "👗 Korean Outfits": {
+        "trending": "oversized t shirt women korean",
+        "evergreen": "korean casual fashion women"
+    },
 
-    "✨ Korean Products": "korean aesthetic desk accessories cute products",
+    "✨ Korean Products": {
+        "trending": "cute desk accessories aesthetic",
+        "evergreen": "korean aesthetic products"
+    },
 
-    "💍 Jewellery": "minimal korean pearl jewellery women"
+    "💍 Jewellery": {
+        "trending": "pearl necklace women",
+        "evergreen": "minimal korean jewellery"
+    }
 }
 
 headers = {
@@ -58,39 +70,51 @@ def get_products(search_query):
         except:
             continue
 
-    trending_products = products[:3]
-
-    remaining_products = products[3:]
-
-    if len(remaining_products) >= 2:
-        evergreen_products = random.sample(remaining_products, 2)
-    else:
-        evergreen_products = remaining_products
-
-    return trending_products + evergreen_products
+    return products[:5]
 
 
 async def send_products():
 
     bot = Bot(token=BOT_TOKEN)
 
-    message = "📌 Daily Pinterest Product Feed\n\n"
+    for category, searches in categories.items():
 
-    for category, search in categories.items():
+        message = f"📌 {category}\n\n"
 
-        message += f"{category}\n\n"
+        trending_products = get_products(searches["trending"])[:3]
 
-        products = get_products(search)
+        evergreen_products = get_products(searches["evergreen"])[:2]
 
-        for index, product in enumerate(products, start=1):
+        final_products = trending_products + evergreen_products
+
+        keyboard = []
+
+        for index, product in enumerate(final_products, start=1):
+
+            product_type = "🔥 Trending" if index <= 3 else "🌱 Evergreen"
 
             message += (
                 f"{index}. {product['title']}\n"
-                f"💰 ₹{product['price']}\n"
-                f"🔗 {product['link']}\n\n"
+                f"{product_type}\n"
+                f"💰 ₹{product['price']}\n\n"
             )
 
-    await bot.send_message(chat_id=CHAT_ID, text=message[:4000])
+            keyboard.append(
+                [
+                    InlineKeyboardButton(
+                        f"🛒 Product {index}",
+                        url=product['link']
+                    )
+                ]
+            )
+
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
+        await bot.send_message(
+            chat_id=CHAT_ID,
+            text=message[:4000],
+            reply_markup=reply_markup
+        )
 
 
 asyncio.run(send_products())
