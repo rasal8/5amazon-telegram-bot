@@ -1,12 +1,11 @@
 import requests
 import random
+import asyncio
 from bs4 import BeautifulSoup
 from telegram import Bot
 
 BOT_TOKEN = "8843677021:AAEFr8bnX6szlIcvXV4gFs5OCt9CceBx1fQ"
-CHAT_ID = "-1292721585"
-
-bot = Bot(token=BOT_TOKEN)
+CHAT_ID = "-1003615762835"
 
 categories = {
     "🏠 Home Decor": "cozy home decor aesthetic",
@@ -46,13 +45,10 @@ def get_products(search_query):
 
             price = price_whole.text.strip() if price_whole else "N/A"
 
-            image = item.select_one("img.s-image")["src"]
-
             products.append({
                 "title": title,
                 "price": price,
-                "link": full_link,
-                "image": image
+                "link": full_link
             })
 
         except:
@@ -67,18 +63,18 @@ def get_products(search_query):
     else:
         evergreen_products = remaining_products
 
-    final_products = trending_products + evergreen_products
-
-    return final_products
+    return trending_products + evergreen_products
 
 
-message = "📌 Daily Pinterest Product Feed\n\n"
+async def send_products():
 
-for category, search in categories.items():
+    bot = Bot(token=BOT_TOKEN)
 
-    message += f"{category}\n\n"
+    message = "📌 Daily Pinterest Product Feed\n\n"
 
-    try:
+    for category, search in categories.items():
+
+        message += f"{category}\n\n"
 
         products = get_products(search)
 
@@ -90,10 +86,7 @@ for category, search in categories.items():
                 f"🔗 {product['link']}\n\n"
             )
 
-    except Exception as e:
+    await bot.send_message(chat_id=CHAT_ID, text=message[:4000])
 
-        message += f"Error loading {category}\n\n"
 
-bot.send_message(chat_id=CHAT_ID, text=message[:4000])
-
-print("Products sent successfully")
+asyncio.run(send_products())
