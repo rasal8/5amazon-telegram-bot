@@ -9,23 +9,23 @@ CHAT_ID = "-1003615762835"
 
 categories = {
     "🏠 Home Decor": {
-        "trending": "table lamp aesthetic bedroom",
-        "evergreen": "minimal room decor"
+        "trending": "aesthetic bedside lamp",
+        "evergreen": "minimal beige room decor"
     },
 
     "👗 Korean Outfits": {
-        "trending": "oversized t shirt women korean",
-        "evergreen": "korean casual fashion women"
+        "trending": "korean oversized tshirt women",
+        "evergreen": "korean casual outfit women"
     },
 
     "✨ Korean Products": {
-        "trending": "cute desk accessories aesthetic",
-        "evergreen": "korean aesthetic products"
+        "trending": "cute aesthetic desk setup",
+        "evergreen": "korean aesthetic accessories"
     },
 
     "💍 Jewellery": {
-        "trending": "pearl necklace women",
-        "evergreen": "minimal korean jewellery"
+        "trending": "pearl jewellery women",
+        "evergreen": "minimal necklace women"
     }
 }
 
@@ -51,7 +51,7 @@ def get_products(search_query):
 
         try:
 
-            title = item.select_one("h2 span").text.strip()
+            title = item.select_one("h2 span").text.strip()[:55]
 
             link = item.select_one("a.a-link-normal")["href"]
 
