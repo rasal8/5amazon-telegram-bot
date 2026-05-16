@@ -42,7 +42,7 @@ def get_products(search_query, count):
 
     soup = BeautifulSoup(response.text, "lxml")
 
-    items = soup.select("div[data-component-type='s-search-result']")
+    items = soup.find_all("div", {"data-component-type": "s-search-result"})
 
     products = []
 
@@ -50,15 +50,17 @@ def get_products(search_query, count):
 
         try:
 
-            title = item.select_one("h2 span").text.strip()[:55]
+            title_tag = item.find("h2")
 
-            link = item.select_one("h2 a")["href"]
+            title = title_tag.get_text(strip=True)[:55]
+
+            link = item.find("a", href=True)["href"]
 
             full_link = "https://www.amazon.in" + link
 
-            price_whole = item.select_one("span.a-price-whole")
+            price_whole = item.find("span", class_="a-price-whole")
 
-            price = price_whole.text.strip() if price_whole else "N/A"
+            price = price_whole.get_text(strip=True) if price_whole else "N/A"
 
             if title not in [p["title"] for p in products]:
 
