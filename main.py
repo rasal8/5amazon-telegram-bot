@@ -7,9 +7,9 @@ from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
 BOT_TOKEN = "8843677021:AAEFr8bnX6szlIcvXV4gFs5OCt9CceBx1fQ"
 CHAT_ID = "-1003615762835"
 
-ACCESS_KEY = os.getenv("AMAZON_ACCESS_KEY")
-SECRET_KEY = os.getenv("AMAZON_SECRET_KEY")
-PARTNER_TAG = PARTNER_TAG = "rrasal-21"
+ACCESS_KEY = "AKIAWUKOUR4L3PTYKQL7"
+SECRET_KEY = "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"
+PARTNER_TAG = "rrasal-21"
 
 amazon = AmazonApi(
     ACCESS_KEY,
