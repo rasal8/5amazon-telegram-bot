@@ -15,13 +15,14 @@ categories = {
 }
 
 headers = {
-    "User-Agent": "Mozilla/5.0"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9"
 }
 
 
 def get_products(search_query):
 
-    url = f"https://www.amazon.in/s?k={search_query.replace(' ', '+')}"
+    url = f"https://www.amazon.in/s?k={search_query.replace(' ', '+')}&ref=nb_sb_noss"
 
     response = requests.get(url, headers=headers)
 
