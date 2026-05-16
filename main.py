@@ -9,7 +9,7 @@ CHAT_ID = "-1003615762835"
 
 ACCESS_KEY = os.getenv("AMAZON_ACCESS_KEY")
 SECRET_KEY = os.getenv("AMAZON_SECRET_KEY")
-PARTNER_TAG = os.getenv("AMAZON_PARTNER_TAG")
+PARTNER_TAG = PARTNER_TAG = "rrasal-21"
 
 amazon = AmazonApi(
     ACCESS_KEY,
