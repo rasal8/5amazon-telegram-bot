@@ -7,7 +7,6 @@ from telegram import Bot
 BOT_TOKEN = "8843677021:AAEFr8bnX6szlIcvXV4gFs5OCt9CceBx1fQ"
 CHAT_ID = "-1003615762835"
 
-categories = {
     categories = {
     "🏠 Home Decor": "korean home decor aesthetic room decor lamp beige",
     
