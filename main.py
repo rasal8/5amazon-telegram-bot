@@ -1,5 +1,4 @@
 import requests
-import random
 import asyncio
 from bs4 import BeautifulSoup
 from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
@@ -35,9 +34,9 @@ headers = {
 }
 
 
-def get_products(search_query):
+def get_products(search_query, count):
 
-    url = f"https://www.amazon.in/s?k={search_query.replace(' ', '+')}&ref=nb_sb_noss"
+    url = f"https://www.amazon.in/s?k={search_query.replace(' ', '+')}"
 
     response = requests.get(url, headers=headers)
 
@@ -61,16 +60,18 @@ def get_products(search_query):
 
             price = price_whole.text.strip() if price_whole else "N/A"
 
-            products.append({
-                "title": title,
-                "price": price,
-                "link": full_link
-            })
+            if title not in [p["title"] for p in products]:
+
+                products.append({
+                    "title": title,
+                    "price": price,
+                    "link": full_link
+                })
 
         except:
             continue
 
-    return products[:5]
+    return products[:count]
 
 
 async def send_products():
@@ -79,13 +80,16 @@ async def send_products():
 
     for category, searches in categories.items():
 
-        message = f"📌 {category}\n\n"
+        trending_products = get_products(searches["trending"], 3)
 
-        trending_products = get_products(searches["trending"])[:3]
-
-        evergreen_products = get_products(searches["evergreen"])[:2]
+        evergreen_products = get_products(searches["evergreen"], 2)
 
         final_products = trending_products + evergreen_products
+
+        if not final_products:
+            continue
+
+        message = f"📌 {category}\n\n"
 
         keyboard = []
 
@@ -99,20 +103,18 @@ async def send_products():
                 f"💰 ₹{product['price']}\n\n"
             )
 
-            keyboard.append(
-                [
-                    InlineKeyboardButton(
-                        f"🛒 Product {index}",
-                        url=product['link']
-                    )
-                ]
-            )
+            keyboard.append([
+                InlineKeyboardButton(
+                    f"🛒 View Product {index}",
+                    url=product["link"]
+                )
+            ])
 
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         await bot.send_message(
             chat_id=CHAT_ID,
-            text=message[:4000],
+            text=message,
             reply_markup=reply_markup
         )
 
