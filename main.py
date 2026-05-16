@@ -88,12 +88,12 @@ async def send_products():
 
         if not final_products:
 
-    await bot.send_message(
-        chat_id=CHAT_ID,
-        text=f"❌ No products found for {category}"
-    )
+            await bot.send_message(
+                chat_id=CHAT_ID,
+                text=f"❌ No products found for {category}"
+            )
 
-    continue
+            continue
 
         message = f"📌 {category}\n\n"
 
