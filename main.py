@@ -87,7 +87,13 @@ async def send_products():
         final_products = trending_products + evergreen_products
 
         if not final_products:
-            continue
+
+    await bot.send_message(
+        chat_id=CHAT_ID,
+        text=f"❌ No products found for {category}"
+    )
+
+    continue
 
         message = f"📌 {category}\n\n"
 
